@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * This class is a simple application that writes a random number on a file.
@@ -24,21 +25,24 @@ import javax.swing.JPanel;
 public class BadIOGUI {
 
     private static final String TITLE = "A very simple GUI application";
+    private static final String RESULT = "Result";
     private static final String PATH = System.getProperty("user.home")
             + System.getProperty("file.separator")
             + BadIOGUI.class.getSimpleName() + ".txt";
     private static final int PROPORTION = 5;
     private final Random rng = new Random();
     private final JFrame frame = new JFrame(TITLE);
+    private final JTextField text = new JTextField(RESULT);
 
     /**
      * 
      */
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
-        canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
+        canvas.setLayout(new BorderLayout());
         canvas.add(write, BorderLayout.CENTER);
+        canvas.add(text, BorderLayout.NORTH);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -55,7 +59,9 @@ public class BadIOGUI {
                  * your UI becomes completely unresponsive.
                  */
                 try (PrintStream ps = new PrintStream(PATH)) {
-                    ps.print(rng.nextInt());
+                    final int output = rng.nextInt();
+                    ps.print(output);
+                    BadIOGUI.this.text.setText(String.valueOf(output));
                 } catch (FileNotFoundException e1) {
                     JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
@@ -86,6 +92,7 @@ public class BadIOGUI {
         /*
          * OK, ready to pull the frame onscreen
          */
+        frame.pack();
         frame.setVisible(true);
     }
 

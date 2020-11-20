@@ -1,20 +1,22 @@
 package it.unibo.oop.lab.advanced;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
 
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
     private final DrawNumber model;
     private final DrawNumberView view;
 
     /**
+     * @throws IOException 
+     * @throws URISyntaxException 
      * 
      */
-    public DrawNumberApp() {
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+    public DrawNumberApp() throws IOException, URISyntaxException {
+        this.model = new DrawNumberImpl();
         this.view = new DrawNumberViewImpl();
         this.view.setObserver(this);
         this.view.start();
@@ -45,9 +47,14 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     /**
      * @param args
      *            ignored
+     * @throws URISyntaxException 
      */
-    public static void main(final String... args) {
-        new DrawNumberApp();
+    public static void main(final String... args) throws URISyntaxException {
+        try {
+            new DrawNumberApp();
+            new DrawNumberViewImpl();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
-
 }

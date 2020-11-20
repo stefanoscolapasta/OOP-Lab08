@@ -1,22 +1,32 @@
 package it.unibo.oop.lab.mvc;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * A very simple program using a graphical interface.
  * 
  */
 public final class SimpleGUI {
-
     private final JFrame frame = new JFrame();
-
+    private final JTextField textField = new JTextField();
+    private final JTextArea textArea = new JTextArea();
+    private final JButton btPrint = new JButton("Print");
+    private final JButton btShowHistory = new JButton("Show history");
     /*
      * Once the Controller is done, implement this class in such a way that:
      * 
-     * 1) I has a main method that starts the graphical application
+     * 1) It has a main method that starts the graphical application
      * 
      * 2) In its constructor, sets up the whole view
      * 
@@ -38,7 +48,36 @@ public final class SimpleGUI {
      * builds a new {@link SimpleGUI}.
      */
     public SimpleGUI() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        final JPanel innerPanel = new JPanel();
+        final ControllerImpl controller = new ControllerImpl();
+        panel.add(this.textField, BorderLayout.NORTH);
+        panel.add(this.textArea, BorderLayout.CENTER);
+        innerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        innerPanel.add(this.btPrint);
+        innerPanel.add(this.btShowHistory);
+        panel.add(innerPanel, BorderLayout.SOUTH);
 
+        this.btPrint.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+                try {
+                    controller.setStringToPrint(SimpleGUI.this.textField.getText());
+                    controller.printCurrentString(); 
+                } catch (IllegalStateException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+
+        this.btShowHistory.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+                SimpleGUI.this.textArea.setText(controller.getHistoryStrings().toString());
+            }
+        });
         /*
          * Make the frame half the resolution of the screen. This very method is
          * enough for a single screen setup. In case of multiple monitors, the
@@ -53,6 +92,8 @@ public final class SimpleGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / 2, sh / 2);
+        this.frame.setContentPane(panel);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
@@ -60,6 +101,13 @@ public final class SimpleGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+        this.frame.setVisible(true);
+    }
+    public JFrame getFrame() {
+        return this.frame;
+    }
+    public static void main(final String[] args) {
+        new SimpleGUI();
     }
 
 }

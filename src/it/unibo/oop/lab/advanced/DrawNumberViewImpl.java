@@ -95,6 +95,10 @@ public final class DrawNumberViewImpl implements DrawNumberView {
                 JOptionPane.ERROR_MESSAGE);
     }
 
+    public void displayError(final String message) {
+        JOptionPane.showMessageDialog(this.frame, message);
+    }
+
     @Override
     public void result(final DrawResult res) {
         switch (res) {
@@ -106,6 +110,7 @@ public final class DrawNumberViewImpl implements DrawNumberView {
             plainMessage(res.getDescription() + NEW_GAME);
             break;
         default:
+            this.displayError("Error occured");
             throw new IllegalStateException("Unexpected result: " + res);
         }
         observer.resetGame();

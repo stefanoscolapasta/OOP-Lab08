@@ -1,11 +1,63 @@
 package it.unibo.oop.lab.mvcio2;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import it.unibo.oop.lab.mvcio.Controller;
+
 /**
  * A very simple program using a graphical interface.
  * 
  */
 public final class SimpleGUIWithFileChooser {
-
+    private final Controller contr;
+    private SimpleGUIWithFileChooser() {
+        this.contr = new Controller();
+        final JFrame frame = new JFrame();
+        final JPanel panel = new JPanel(new BorderLayout());
+        final JPanel innerPanel = new JPanel(new BorderLayout());
+        final JTextField text = new JTextField();
+        text.setEditable(false);
+        final JButton btBrowse = new JButton("Browse file");
+        final JTextArea textArea = new JTextArea();
+        /**
+         * 
+         */
+        btBrowse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final JFileChooser jfc = new JFileChooser();
+                final int ret = jfc.showSaveDialog(btBrowse);
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    SimpleGUIWithFileChooser.this.contr.setThisFileAsCurrent(jfc.getSelectedFile());
+                    text.setText(contr.getCurrentFilePath());
+                } else if (ret == JFileChooser.ERROR_OPTION) {
+                    JOptionPane.showMessageDialog(btBrowse, "An error occured");
+                }
+            }
+        });
+        innerPanel.add(text, BorderLayout.CENTER);
+        innerPanel.add(btBrowse, BorderLayout.LINE_END);
+        panel.add(innerPanel, BorderLayout.NORTH);
+        panel.add(textArea, BorderLayout.CENTER);
+        frame.setContentPane(panel);
+        final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        final int sw = (int) screen.getWidth();
+        final int sh = (int) screen.getHeight();
+        frame.setSize(sw / 2, sh / 2);
+        frame.setVisible(true);
+    }
     /*
      * TODO: Starting from the application in mvcio:
      * 
@@ -31,5 +83,7 @@ public final class SimpleGUIWithFileChooser {
      * update the UI: in this example the UI knows when should be updated, so
      * try to keep things separated.
      */
-
+    public static void main(final String[] args) {
+        new SimpleGUIWithFileChooser();
+    }
 }

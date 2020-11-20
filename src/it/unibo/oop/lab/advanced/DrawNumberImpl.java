@@ -1,6 +1,17 @@
 package it.unibo.oop.lab.advanced;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
+
 
 /**
  *
@@ -13,20 +24,26 @@ public final class DrawNumberImpl implements DrawNumber {
     private final int attempts;
     private int remainingAttempts;
     private final Random random = new Random();
+    private final List<String> configs; 
+    private final Map<String, Integer> configurations;
 
-    /**
-     * @param min
-     *            minimum number
-     * @param max
-     *            maximum number
-     * @param attempts
-     *            the maximum number of attempts
-     */
-    public DrawNumberImpl(final int min, final int max, final int attempts) {
-        this.min = min;
-        this.max = max;
-        this.attempts = attempts;
-        this.reset();
+    public DrawNumberImpl() throws IOException, URISyntaxException{
+        this.configurations = new HashMap<>();
+        //this.configs = Files.readAllLines(Path.of(ClassLoader.getSystemResource("config.yml").getPath().replace(":", "")));
+        final URI uri = this.getClass().getResource("config.yml").toURI();
+        this.configs = Files.readAllLines(Paths.get(uri));
+        this.loadConfigs();
+        this.min = this.configurations.get("min");
+        this.max = this.configurations.get("max");
+        this.attempts = this.configurations.get("attempts");
+        System.out.println(min + " " + max + " " + attempts);
+    }
+
+    private void loadConfigs() {
+        for (final String line : this.configs) {
+            final StringTokenizer tokenizer = new StringTokenizer(line, ": ");
+            this.configurations.put(tokenizer.nextToken().trim(), Integer.valueOf(tokenizer.nextToken().trim()));
+        }
     }
 
     @Override

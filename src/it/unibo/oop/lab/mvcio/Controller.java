@@ -1,10 +1,45 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 /**
  * 
  */
 public class Controller {
+    private File f;
+    private static final String DEFAULT_PATH = System.getProperty("user.name") + System.getProperty("file.seperator") + "output.txt";
 
+    public Controller() {
+        this.f = new File(DEFAULT_PATH);
+    }
+    /**
+     *@param f is now the current string
+     */
+    public void setThisFileAsCurrent(final File f) {
+        this.f = f;
+    }
+    /**
+     *@return gets current string
+     */
+    public File getCurrentFile() {
+        return this.f;
+    }
+    /**
+     *@return gets current string
+     */
+    public String getCurrentFilePath() {
+        return this.f.getAbsolutePath();
+    }
+    /**
+     *@param s added to the file
+     */
+    public void addStringToFile(final String s) throws IOException {
+        try (PrintStream ps = new PrintStream(this.f)) {
+            ps.print(s); 
+        } 
+    }
     /*
      * This class must implement a simple controller responsible of I/O access. It
      * considers a single file at a time, and it is able to serialize objects in it.
