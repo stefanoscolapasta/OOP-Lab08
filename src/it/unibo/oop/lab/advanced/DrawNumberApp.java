@@ -15,7 +15,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @throws URISyntaxException 
      * 
      */
-    public DrawNumberApp() throws IOException, URISyntaxException {
+    public DrawNumberApp() {
         this.model = new DrawNumberImpl();
         this.view = new DrawNumberViewImpl();
         this.view.setObserver(this);
@@ -49,12 +49,9 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      *            ignored
      * @throws URISyntaxException 
      */
-    public static void main(final String... args) throws URISyntaxException {
-        try {
+    public static void main(final String... args) {
             new DrawNumberApp();
             new DrawNumberViewImpl();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+
     }
 }
